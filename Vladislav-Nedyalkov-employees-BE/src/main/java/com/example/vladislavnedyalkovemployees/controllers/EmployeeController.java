@@ -20,9 +20,9 @@ import java.util.zip.DataFormatException;
 @RequestMapping("/employee")
 public class EmployeeController {
 
-    @Autowired
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
+    @Autowired
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
@@ -34,8 +34,7 @@ public class EmployeeController {
         }
 
         try {
-            List<PairProjectWorkDuration> pairsWorkDurationFromCsv = employeeService.getPairsWorkDurationFromCsv(file);
-            return ResponseEntity.ok(new PairProjectResponse(pairsWorkDurationFromCsv, null));
+            return ResponseEntity.ok(new PairProjectResponse(employeeService.getPairsWorkDurationFromCsv(file), null));
         } catch (DataFormatException | NumberFormatException | FileFormatException e ) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new PairProjectResponse(null, e.getMessage()));
         } catch (Exception e) {
